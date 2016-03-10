@@ -1,0 +1,43 @@
+Pentru usurinta implementarii am create structuri pentru dreapta si punct si functii de citire ale acestora din fisier care intorc vectori.
+Pentru eficienta am creat o noua structura TElement, care va fi continuta de nodurile arborelui si care poate fi ori dreapta ori punct in functie de pozitia nodului.
+Modul de interpretare al informatiei este dat de campul "type" al structurii.
+
+Modul 1
+
+In linii mari folosesc urmatorul algoritm:
+
+1) Citesc ecuatiile liniilor din fisier si le stochez intr-un vector
+2) Citesc punctele si le stochez in alt vector
+3) Citesc intructiunile de construire pentru arbore si aplic urmatorul algoritm de constructie:
+	- creez un nou nod ce contine ca informatie ecuatia dreptei
+	- daca are copil stanga atunci aplic recursiv functia pentru nodul nou creata
+	- daca are copil dreapta fac acelasi lucru
+	- in orice caz iesirea din recursivitatea se va face atunci cand se termina de construit o ramura
+	
+4) Odata creat arborele eliberez vectorul de linii.
+5) Pentru fiecare punct din vectorul de puncte pentru indexare, parcurg arborele (alegand corespunzator ramura) pana cand ajung la NULL, moment in care creez un nou nod, care are drept informatie coordonatele punctului si indexul regiunii.
+6) Odata ce regiunil sunt indexate, le printez, iar apoi citesc unul cate unul punctele ce trebuiesc localizate si aplic functia de localizare pt fiecare in parte. Am ales aceasta implementare pentru utilizarea eficienta a memoriei.
+
+Modul 2
+1) Citesc ecuatiile liniilor intr-un vector. OBS: aici nu mai este nevoie sa le citesc pe toate intr-un vector ci pot sa le adaug una cate una. Am preferat sa las asa pentru ca aveam deja functia de citire scrisa la modul 1.
+2) Odata citite liniile, creez arborele cu algoritmul din enunt.
+3) Eliberez vectorul liniilor, citesc punctele (cu aceeasi observatie: aveam deja functiile definite, desi era mai eficient sa le citesc unul cate unul) si indexez regiunile.
+4) Citesc punct cu punct si decid regiune de care apartine fiecare.
+
+_____
+
+Pentru printarea arborelui folosesc urmatorul algoritm:
+1) Daca nodul este o linie (type = LINE) printez informatia ca linie.
+2) Daca nodul este punct printez coordonatele si indexul regiunii.
+3) Detectarea regiunilor artificiale (null) se face astfel: daca un nod linie are copii neinitializati, atunci stiu ca trebuia sa gasesc un index acolo, prin urmare printez null.
+(parcurgerea este SDR - radacina este printata la sfarsit, dar trebuie cunoscuta natura nodului astfel incat sa stiu ce fel de copii ar trebui sa gasesc)
+
+Obs: La modul 1 putea fi optimizata utilizarea memoriei citind dreptele prima data, apoi instructiunile de construire si nu punctele de indexare. Puteam face acest lucru folosind fseek. Am preferat sa las implementarea in varianta simpla.
+
+Rolul fisierelor:
+	geometry.* - declarearea structurile utilizate ca informatie pentru noduri si la citire precum si a functiilor de decizie
+	tree.* - declararea tipului si a functiilor generale pentru un arbore binar oarecare
+	inout.* - functii de citire pentru linii, puncte si a informatiilor despre noduri
+	bsp.* - functii de citire, construire, adaugare, si parcurgere a arborelui de partitionare
+	opmodes.c - definirea modurilor de functionare ale programului
+	
